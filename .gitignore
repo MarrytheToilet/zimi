@@ -1,0 +1,9 @@
+# Ignore models directory
+models/*
+!models/.gitkeep
+
+# Python 环境和依赖
+venv/
+*.pyc
+__pycache__/
+*.ipynb_checkpoints
