@@ -42,23 +42,38 @@ def filter_data(df):
     """
     筛选符合条件的数据。
     """
-    df_filtered = df[(df['笔画数'] >= 3) & (df['笔画数'] <= 10)]
-    df_filtered = df_filtered[df_filtered['结构代码'].str.startswith(('B', 'H'))]
+    df_filtered = df[(df['笔画数'] >= 3) & (df['笔画数'] <= 30)]
+    df_filtered = df_filtered[df_filtered['结构代码'].str.startswith(('B', 'H', 'E', 'M', 'Q'))]
     return df_filtered
 
 def create_structure_answer(row):
     """
     生成结构谜底。
     """
-    structure = "上下" if row['结构代码'].startswith('B') else "左右" if row['结构代码'].startswith('H') else ""
+    structure_map = {
+        'B': '上下',
+        'H': '左右',
+        'E': '上中下',
+        'M': '左中右',
+        'Q': '全包围'
+    }
+    structure_code = row['结构代码'][0]
+    structure = structure_map.get(structure_code, "")
     return f"[{structure}]" if structure else None
 
 def create_chaizi_answer(row):
     """
-    生成拆字谜底。
+    生成拆字谜底。只使用第一种拆字方法。
     """
-    chaizi = row['拆字'][0].replace(" ","") if row['拆字'] and len(row['拆字']) > 0 else ""
-    return chaizi if chaizi else None
+    # 检查是否有拆字，并且长度大于0
+    if row['拆字'] and len(row['拆字']) > 0:
+        # 选择第一种拆字方法
+        first_chaizi = row['拆字'][0]
+        # 将拆字方法中的部件拼接成字符串，并去除空格
+        chaizi = "".join(first_chaizi).replace(" ", "")
+        return chaizi
+    return None
+
 
 def add_answers(df):
     """

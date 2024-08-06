@@ -15,6 +15,7 @@ label_to_index_path = "./data/results/label_to_index.json"
 structure_classifier_model_path = "./models/structure_classifier/riddle_classifier.pth"
 keyword_extractor_model_path = "./models/keyword_extractor"
 
+# embedding_model_path = "BAAI/bge-small-zh-v1.5"
 embedding_model_path = "BAAI/bge-small-zh-v1.5"
 
 # 转换拆字列和pronunciation_details列
@@ -74,7 +75,7 @@ def test_riddle(riddle, classifier, text2text_generator, mapping_dict, index_to_
     predicted_structure = classifier.classify([riddle], index_to_label)[0]
     input_text = f"请抽取字谜中的关键字：{riddle}。字谜中的关键字是：[MASK]"
 
-    generation = text2text_generator(input_text, max_length=5, do_sample=False)
+    generation = text2text_generator(input_text, max_length=10, do_sample=False)
     predicted_keyword = generation[0]['generated_text'].replace(" ", "")
     predicted_answer = mapping_dict.get(predicted_structure + predicted_keyword, "未找到匹配的谜底")
 
